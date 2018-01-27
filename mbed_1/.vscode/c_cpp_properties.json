@@ -30,7 +30,7 @@
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/RTX/Source/TOOLCHAIN_GCC",
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/RTX/Source/TOOLCHAIN_GCC/TARGET_M3",
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/Source",
-                "c:/Users/jbeau/Documents/GitHub/s5_app2/src",
+                "c:/Users/jbeau/Documents/GitHub/s5_app2/mbed_1/src",
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos",
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx4",
                 "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5",
@@ -311,7 +311,7 @@
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/RTX/Source/TOOLCHAIN_GCC",
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/RTX/Source/TOOLCHAIN_GCC/TARGET_M3",
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5/Source",
-                    "c:/Users/jbeau/Documents/GitHub/s5_app2/src",
+                    "c:/Users/jbeau/Documents/GitHub/s5_app2/mbed_1/src",
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos",
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx4",
                     "C:/Users/jbeau/.platformio/packages/framework-mbed/rtos/TARGET_CORTEX/rtx5",
@@ -957,6 +957,5 @@
             ],
             "intelliSenseMode": "clang-x64"
         }
-    ],
-    "version": 3
+    ]
 }

@@ -6,7 +6,7 @@
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "name": "PlatformIO Debugger",
-            "target": "c:/Users/jbeau/Documents/GitHub/s5_app2_mbed_2/.pioenvs/lpc1768/firmware.elf",
+            "target": "c:/Users/jbeau/Documents/GitHub/s5_app2/mbed_2/.pioenvs/lpc1768/firmware.elf",
             "gdbpath": "C:/Users/jbeau/.platformio/penv/Scripts/piodebuggdb",
             "autorun": [ "source .pioinit" ]
         }

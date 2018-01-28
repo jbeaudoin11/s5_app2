@@ -33,8 +33,8 @@ Mail<ValueChangeEvent_t, 16> mail_box;
 DigitalIn n_1(p15);
 DigitalIn n_2(p16);
 
-// AnalogIn a_1(p19);
-// AnalogIn a_2(p20);
+AnalogIn a_1(p19);
+AnalogIn a_2(p20);
 
 DigitalOut led_1(LED1);
 DigitalOut led_2(LED2);
@@ -51,6 +51,16 @@ void updateTimeBuffer(time_t time) {
         localtime(&time)
     );
 }
+
+// time_t getRTC() {
+//     mutex.lock()
+
+//     time_t t = time(NULL);
+
+//     mutex.unlock();
+
+//     return t;
+// }
 
 void numericRead(void) {
     int old_values[2] = {0, 0};
@@ -168,12 +178,68 @@ void numericRead(void) {
 
 void analogRead(void) {
 
+    Timer timer_50ms;
+
+    unsigned int current_sums[2] = {0, 0};
+    float averages[2] = {0, 0};
+    float old_averages[2] = {0, 0};
+
+    timer_50ms.reset();
+    timer_50ms.start();
+
+    char ctn = 0;
     while (true) {
-        // synchronisation sur la période d'échantillonnage
-        // lecture de l'étampe temporelle
-        // lecture des échantillons analogiques
-        // calcul de la nouvelle moyenne courante
-        // génération éventuelle d'un événement
+        // If we are at the 5th value
+        if(ctn == 5) {
+            averages[0] = current_sums[0]/5.0f;
+            averages[1] = current_sums[1]/5.0f;
+
+            // If a_1 new average is 12.5% over its old_averages
+            if(averages[0] > 1.125f * old_averages[0]) {
+                ValueChangeEvent_t *data = mail_box.alloc();
+
+                // Make sure we alloc worked
+                if(data != NULL) {
+                    data->event_type = ANALOG_VALUE_CHANGE;
+                    data->pin_src = ANALOG_1;
+                    data->value = a_1.read_u16();
+                    data->timestamp = time(NULL);
+
+                    mail_box.put(data);
+                } 
+            }
+
+            // If a_2 new average is 12.5% over its old_averages
+            if(averages[1] > 1.125f * old_averages[1]) {
+                ValueChangeEvent_t *data = mail_box.alloc();
+
+                // Make sure we alloc worked
+                if(data != NULL) {
+                    data->event_type = ANALOG_VALUE_CHANGE;
+                    data->pin_src = ANALOG_2;
+                    data->value = a_2.read_u16();
+                    data->timestamp = time(NULL);
+
+                    mail_box.put(data);
+                } 
+            }
+
+            old_averages[0] = averages[0];
+            old_averages[1] = averages[1];
+            current_sums[0] = 0;
+            current_sums[1] = 0;
+            ctn = 0;
+        }
+
+        if(timer_50ms.read_ms() > 50) {
+            timer_50ms.reset();
+
+            current_sums[0] += a_1.read_u16();
+            current_sums[1] += a_2.read_u16();
+            ctn++;
+        }
+        
+        Thread::wait(1);
     }
 }
 
@@ -190,7 +256,7 @@ void serialOutputController(void) {
             switch(data->event_type) {
                 case NUMERIC_VALUE_CHANGE: {
                     printf(
-                        "%s -- %.1d -- %s\n\r",
+                        "%s -- %6.1d -- %s\n\r",
                         (data->pin_src == NUMERIC_1) ? "NUM_1":"NUM_2",
                         (int) data->value,
                         time_buffer
@@ -198,18 +264,25 @@ void serialOutputController(void) {
                     break;
                 }
                 case ANALOG_VALUE_CHANGE: {
-
+                    printf(
+                        "%s -- 0x%.4X -- %s\n\r",
+                        (data->pin_src == ANALOG_1) ? "ANA_1":"ANA_2",
+                        (int) data->value,
+                        time_buffer
+                    );
                     break;
                 }
             }
             
             mail_box.free(data);
         }
+
+        Thread::wait(1);        
     }
 }
 
 int main() {
-    
+    printf("====== START ======\n\r");
     // Init RTC
     set_time(1517083407);
 
@@ -221,11 +294,11 @@ int main() {
     Thread serial_thread;
 
     numeric_thread.set_priority(osPriorityHigh);
-    // analog_thread.set_priority(osPriorityAboveNormal);
+    analog_thread.set_priority(osPriorityAboveNormal);
     // serial_thread.set_priority(osPriorityAboveNormal);
 
     numeric_thread.start(numericRead);
-    // analog_thread.start();
+    analog_thread.start(analogRead);
     serial_thread.start(serialOutputController);
 
     osThreadSetPriority(main_thread, osPriorityNormal);

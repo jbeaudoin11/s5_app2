@@ -1,0 +1,31 @@
+----------
+for overhead:           4us
+total time:             28644209us
+
+1000000 calculations took:      28644205us
+single operation took:          28.644203us
+single operation took:          2749.844 cycles
+
+----------
+for overhead:           4us
+total time:             46077805us
+
+1000000 calculations took:      46077801us
+single operation took:          46.077801us
+single operation took:          4423.469 cycles
+
+----------
+for overhead:           4us
+total time:             41562505us
+
+1000000 calculations took:      41562501us
+single operation took:          41.562500us
+single operation took:          3990.000 cycles
+
+----------
+for overhead:           4us
+total time:             12209641us
+
+1000000 calculations took:      12209637us
+single operation took:          12.209637us
+single operation took:          1172.125 cycles
